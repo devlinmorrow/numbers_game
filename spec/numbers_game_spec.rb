@@ -37,15 +37,11 @@ describe NumbersGame do
         end
       end
     end
-    describe "user makes a guess" do
-      before do
-        $stdin = StringIO.new("4")
+    describe "user told how many guesses left" do
+      it "states how many guesses the user has left" do
+        expect{@first_game.how_many_guesses_left}.to output("You have 3 guesses left.\n").to_stdout
       end
-      it "makes a guess" do
-        expect{@first_game.make_guess}.to output.to_stdout
-      end
-    end 
-
+    end
   end
 end
 

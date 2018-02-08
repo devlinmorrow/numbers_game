@@ -1,9 +1,17 @@
 class NumbersGame
 
-  attr_accessor :secret_number, :input_number
+  attr_accessor :secret_number, :input_number, :guesses_left
+
+  def initialize
+    @guesses_left = 3
+  end
+
+  def how_many_guesses_left
+    puts "You have #{guesses_left} guesses left."
+  end
 
   def make_guess
-    puts "Please enter your guess."
+    puts "Please enter your guess between 1 to 10 inclusive."
     @input_number = gets.chomp.to_i
     compare_guess
   end
