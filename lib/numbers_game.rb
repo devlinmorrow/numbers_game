@@ -8,7 +8,7 @@ class NumbersGame
   end
 
   def play_game
-    while guesses_left > 0 && self.is_game_won == false
+    while self.guesses_left > 0 && self.is_game_won == false
       display_how_many_guesses_left
       take_guess_input
       compare_guess(self.input_number, self.secret_number)
@@ -20,7 +20,11 @@ class NumbersGame
   end
 
   def display_how_many_guesses_left
-    puts "You have #{guesses_left} guesses left."
+    if self.guesses_left != 1
+      puts "You have #{guesses_left} guesses left."
+    else
+      puts "You have 1 guess left."
+    end
   end
 
   def take_guess_input
@@ -43,8 +47,8 @@ class NumbersGame
   end
 
   def game_won
-      puts "You won!"
-      self.is_game_won = true
+    puts "You won!"
+    self.is_game_won = true
   end
 
 end

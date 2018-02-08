@@ -84,6 +84,16 @@ describe NumbersGame do
       expect{@example_game.play_game}.to output(/guesses/).to_stdout
     end
   end
+  describe "show when 1 guess left" do
+    before do
+      @example_game = NumbersGame.new
+      @example_game.secret_number = 4
+      $stdin = StringIO.new("7\n7\n\7")
+    end
+    it "should state 1 guess left correctly" do
+      expect{@example_game.play_game}.to output(/1 guess /).to_stdout
+    end
+  end
   describe "if there are no guesses left, do not run the game" do
     before do
       @example_game = NumbersGame.new
