@@ -1,29 +1,50 @@
 class NumbersGame
 
-  attr_accessor :secret_number, :input_number, :guesses_left
+  attr_accessor :secret_number, :input_number, :guesses_left, :is_game_won
 
   def initialize
-    @guesses_left = 3
+    self.guesses_left = 3
+    self.is_game_won = false
   end
 
-  def how_many_guesses_left
+  def play_game
+    while guesses_left > 0 && self.is_game_won == false
+      display_how_many_guesses_left
+      take_guess_input
+      compare_guess(self.input_number, self.secret_number)
+      minus_one_guess
+    end
+    if self.is_game_won == false
+      puts "Sorry, you lost!"
+    end
+  end
+
+  def display_how_many_guesses_left
     puts "You have #{guesses_left} guesses left."
   end
 
-  def make_guess
+  def take_guess_input
     puts "Please enter your guess between 1 to 10 inclusive."
-    @input_number = gets.chomp.to_i
-    compare_guess
+    self.input_number = gets.chomp.to_i
   end
 
-  def compare_guess
-    if @input_number == @secret_number
-      puts "You won!"
-    elsif @input_number > @secret_number 
+  def compare_guess(input, comparator)
+    if input == comparator 
+      game_won
+    elsif input > comparator 
       puts "Your guess was too high!"
     else 
       puts "Your guess was too low!"
     end
+  end
+
+  def minus_one_guess
+    self.guesses_left -= 1
+  end
+
+  def game_won
+      puts "You won!"
+      self.is_game_won = true
   end
 
 end
