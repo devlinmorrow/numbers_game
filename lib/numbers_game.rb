@@ -12,7 +12,7 @@ class NumbersGame
       display_how_many_guesses_left
       take_guess_input
       compare_guess(self.input_number, self.secret_number)
-      minus_one_guess
+    self.guesses_left -= 1
     end
     if self.is_game_won == false
       puts "Sorry, you lost!"
@@ -40,10 +40,6 @@ class NumbersGame
     else 
       puts "Your guess was too low!"
     end
-  end
-
-  def minus_one_guess
-    self.guesses_left -= 1
   end
 
   def game_won
