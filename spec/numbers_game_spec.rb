@@ -1,129 +1,69 @@
 require 'numbers_game'
 
 describe NumbersGame do
-  describe "user inputs a guess" do
-    before do
-      @example_game = NumbersGame.new
-      @example_game.secret_number = 4
-      $stdin = StringIO.new("7")
-      @example_game.take_guess_input
+  subject(:example_game) {
+    NumbersGame.new 
+  }
+  before do
+    example_game.secret_number = 4
+  end
+  it "should let the input number be the number the user enters" do
+    $stdin = StringIO.new("7")
+    example_game.take_guess_input
+    expect(example_game.input_number).to eql(7)
+  end
+  describe "comparison mechanic" do
+    it "prints 'won' if input equivalent to secret number" do
+      example_game.input_number = 4
+      expect{example_game.compare_guess(4,4)}.to output(/won/).to_stdout
     end
-    it "should let the input number be the number the user enters" do
-      expect(@example_game.input_number).to eql(7)
+    it "prints 'high' if input higher than secret number" do
+      expect{example_game.compare_guess(7,4)}.to output(/high/).to_stdout
+    end
+    it "prints 'low' if input lower than secret number" do
+      expect{example_game.compare_guess(2,4)}.to output(/low/).to_stdout
     end
   end
-  describe "the guess is correct" do
-    before do
-      @example_game = NumbersGame.new
-      @example_game.secret_number = 4
-      @example_game.input_number = 4
-    end
-    it "finds that input and secret numbers are equivalent" do
-      expect{@example_game.compare_guess(@example_game.input_number, @example_game.secret_number)}.to output(/won/).to_stdout
-    end
+  it "should run compare after taking input" do
+    $stdin = StringIO.new("7")
+    expect{example_game.run_guess}.to output(/high/).to_stdout
   end
-  describe "the guess is too high" do
-    before do
-      @example_game = NumbersGame.new
-      @example_game.secret_number = 4
-      @example_game.input_number = 7
-    end
-    it "finds that input number is higher than secret number" do
-      expect{@example_game.compare_guess(@example_game.input_number, @example_game.secret_number)}.to output(/high/).to_stdout
-    end
-  end
-  describe "the guess is too low" do
-    before do
-      @example_game = NumbersGame.new
-      @example_game.secret_number = 4
-      @example_game.input_number = 2
-    end
-    it "finds that input number is lower than secret number" do
-      expect{@example_game.compare_guess(@example_game.input_number, @example_game.secret_number)}.to output(/low/).to_stdout
-    end
-  end
-  describe "make a guess" do
-    before do
-      @example_game = NumbersGame.new
-      @example_game.secret_number = 4
-      $stdin = StringIO.new("7\n7\n7")
-    end
-    it "should provide an answer after an input has been entered" do
-      expect{@example_game.play_game}.to output(/high/).to_stdout
-    end
-  end
-  describe "user begins with 3 guesses" do
-    before do
-      @example_game = NumbersGame.new
-    end
+  describe "guesses left mechanic" do
     it "should start with 3 guesses left" do
-      expect(@example_game.guesses_left).to eql(3)
-    end
-  end
-  describe "user told how many guesses left" do
-    before do
-      @example_game = NumbersGame.new
-      @example_game.secret_number = 4
-      $stdin = StringIO.new("7\n7\n7")
+      expect(example_game.guesses_left).to eql(3)
     end
     it "states how many guesses the user has left" do
-      expect{@example_game.play_game}.to output(/guesses left/).to_stdout
+      expect{example_game.display_how_many_guesses_left}.to output(/guesses left/).to_stdout
     end
-  end
-  describe "after making a guess, minus one guess" do
-    before do
-      @example_game = NumbersGame.new
-      @example_game.secret_number = 4
-      $stdin = StringIO.new("7\n7\n7")
-      @example_game.play_game
-    end
-    it "should minus one from guesses left until 0" do
-      expect(@example_game.guesses_left).to eql(0)
-    end
-  end
-  describe "state when 1 guess left" do
-    before do
-      @example_game = NumbersGame.new
-      @example_game.secret_number = 4
-      $stdin = StringIO.new("7\n7\n\7")
+    it "after guess made, minus 1 from guesses left" do
+      example_game.minus_one_guess
+      expect(example_game.guesses_left).to eql(2)
     end
     it "should state when 1 guess left" do
-      expect{@example_game.play_game}.to output(/1 guess /).to_stdout
+      example_game.guesses_left = 1
+      expect{example_game.display_how_many_guesses_left}.to output(/1 guess /).to_stdout
     end
   end
-  describe "the user loses when there are 0 guesses left" do
+  describe "user loses" do
     before do
-      @example_game = NumbersGame.new
-      @example_game.secret_number = 4
-      @example_game.guesses_left = 0
+      example_game.guesses_left = 0
     end
     it "should end when 0 guesses left" do
-      expect{@example_game.play_game}.not_to output(/guesses/).to_stdout
+      expect{example_game.play_game}.not_to output(/guesses/).to_stdout
     end
     it "should tell user they lost" do
-      expect{@example_game.play_game}.to output(/lost/).to_stdout
+      expect{example_game.play_game}.to output(/lost/).to_stdout
     end
   end
-  describe "if the input matches the secret number, you win" do
+  describe "user wins" do
     before do
-      @example_game = NumbersGame.new
-      @example_game.secret_number = 7
-      $stdin = StringIO.new("7")
-    end
-    it "should state game won" do
-      expect{@example_game.play_game}.to output(/won/).to_stdout
-    end
-  end
-  describe "if the input matches the secret number, the game ends" do
-    before do
-      @example_game = NumbersGame.new
-      @example_game.secret_number = 7
-      $stdin = StringIO.new("7")
-      @example_game.play_game
-    end
-    it "should have 2 guesses left if game won with first input" do
-      expect(@example_game.guesses_left).to eql(2)
+      example_game.input_number = 4
+      it "should state game won" do
+        expect{example_game.play_game}.to output(/won/).to_stdout
+      end
+      it "should have 2 guesses left if game won with first input" do
+        expect(example_game.guesses_left).to eql(2)
+      end
     end
   end
 end
-

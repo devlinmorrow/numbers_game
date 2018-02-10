@@ -10,9 +10,8 @@ class NumbersGame
   def play_game
     while self.guesses_left > 0 && self.is_game_won == false
       display_how_many_guesses_left
-      take_guess_input
-      compare_guess(self.input_number, self.secret_number)
-    self.guesses_left -= 1
+      run_guess
+      minus_one_guess
     end
     if self.is_game_won == false
       puts "Sorry, you lost!"
@@ -40,6 +39,15 @@ class NumbersGame
     else 
       puts "Your guess was too low!"
     end
+  end
+
+  def run_guess
+    take_guess_input
+    compare_guess(self.input_number, self.secret_number)
+  end
+
+  def minus_one_guess
+      self.guesses_left -= 1
   end
 
   def game_won

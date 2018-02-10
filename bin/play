@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+# todo: start your game here woot
+# first things first, add lib to your load path
+$LOAD_PATH << somthing
