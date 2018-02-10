@@ -7,7 +7,12 @@ class NumbersGame
     self.is_game_won = false
   end
 
+  def create_secret_number
+    self.secret_number = rand(1..10)
+  end
+
   def play_game
+    create_secret_number
     while self.guesses_left > 0 && self.is_game_won == false
       display_how_many_guesses_left
       run_guess
@@ -47,7 +52,7 @@ class NumbersGame
   end
 
   def minus_one_guess
-      self.guesses_left -= 1
+    self.guesses_left -= 1
   end
 
   def game_won

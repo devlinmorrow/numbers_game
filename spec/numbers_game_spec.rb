@@ -4,6 +4,12 @@ describe NumbersGame do
   subject(:example_game) {
     NumbersGame.new 
   }
+  describe "generate random secret number" do
+    it "should assign a random number to secret number" do
+      example_game.create_secret_number
+      expect(example_game.secret_number).not_to be_nil
+    end
+  end
   before do
     example_game.secret_number = 4
   end
@@ -39,7 +45,7 @@ describe NumbersGame do
       example_game.minus_one_guess
       expect(example_game.guesses_left).to eql(2)
     end
-    it "should state when 1 guess left" do
+    it "should state when exactly one guess is left" do
       example_game.guesses_left = 1
       expect{example_game.display_how_many_guesses_left}.to output(/1 guess /).to_stdout
     end
@@ -51,7 +57,7 @@ describe NumbersGame do
     it "should end when 0 guesses left" do
       expect{example_game.play_game}.not_to output(/guesses/).to_stdout
     end
-    it "should tell user they lost" do
+    it "should tell user that they lost" do
       expect{example_game.play_game}.to output(/lost/).to_stdout
     end
   end
@@ -61,9 +67,15 @@ describe NumbersGame do
       it "should state game won" do
         expect{example_game.play_game}.to output(/won/).to_stdout
       end
-      it "should have 2 guesses left if game won with first input" do
+      it "should end with 2 guesses left if game won with first input" do
         expect(example_game.guesses_left).to eql(2)
       end
+    end
+  end
+  describe "game runs" do
+    it "should display 'guesses' at least once" do
+      $stdin = StringIO.new("7\n7\n7")
+      expect{example_game.play_game}.to output(/guesses/).to_stdout
     end
   end
 end
