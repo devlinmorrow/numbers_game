@@ -1,63 +1,62 @@
 class NumbersGame
 
-  attr_accessor :secret_number, :input_number, :guesses_left, :is_game_won
+  attr_accessor :secret_number, :guesses_left
+  attr_reader :input_number, :is_game_won
 
-  def initialize
-    self.guesses_left = 3
-    self.is_game_won = false
-  end
-
-  def create_secret_number
-    self.secret_number = rand(1..10)
+  def initialize(input = $stdin, output = $stdout)
+    @input = input
+    @output = output  
+    @guesses_left = 3
+    @is_game_won = false
+    @secret_number = rand(1..10)
   end
 
   def play_game
-    create_secret_number
-    while self.guesses_left > 0 && self.is_game_won == false
+    while @guesses_left > 0 && !@is_game_won 
       display_how_many_guesses_left
       run_guess
-      minus_one_guess
     end
-    if self.is_game_won == false
-      puts "Sorry, you lost!"
+    if @is_game_won == false
+      @output.puts "Sorry, you lost!"
     end
   end
 
   def display_how_many_guesses_left
-    if self.guesses_left != 1
-      puts "You have #{guesses_left} guesses left."
+    if @guesses_left != 1
+      @output.puts "You have #{@guesses_left} guesses left."
     else
-      puts "You have 1 guess left."
+      @output.puts "You have 1 guess left."
     end
   end
 
   def take_guess_input
-    puts "Please enter your guess between 1 to 10 inclusive."
-    self.input_number = gets.chomp.to_i
+    @output.puts "Please enter your guess between 1 to 10 inclusive."
+    @input_number = @input.gets.chomp.to_i
   end
 
-  def compare_guess(input, comparator)
-    if input == comparator 
+  def compare_guess(first_compare_number, second_compare_number)
+    if first_compare_number == second_compare_number 
       game_won
-    elsif input > comparator 
-      puts "Your guess was too high!"
+    elsif first_compare_number > second_compare_number
+      @output.puts "Your guess was too high!"
     else 
-      puts "Your guess was too low!"
+      @output.puts "Your guess was too low!"
     end
   end
 
   def run_guess
     take_guess_input
-    compare_guess(self.input_number, self.secret_number)
+    compare_guess(@input_number, @secret_number)
+    minus_one_guess
   end
 
   def minus_one_guess
-    self.guesses_left -= 1
+    @guesses_left -= 1
   end
 
   def game_won
-    puts "You won!"
-    self.is_game_won = true
+    @output.puts "You won!"
+    @is_game_won = true
   end
 
 end
